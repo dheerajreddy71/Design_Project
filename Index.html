@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer-Desk</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Farmer-Desk</h1>
+
+        <!-- Crop Requirements & Pest Warnings -->
+        <div class="form-group">
+            <label for="crop-name">Enter the name of the crop:</label>
+            <input type="text" id="crop-name" name="crop-name">
+            <button onclick="getCropInfo()">Get Crop Info</button>
+        </div>
+        <div class="result" id="crop-result"></div>
+
+        <!-- Weather Forecast -->
+        <div class="form-group">
+            <label for="village-name">Enter the name of the village:</label>
+            <input type="text" id="village-name" name="village-name">
+            <button onclick="getWeatherForecast()">Get Weather Forecast</button>
+        </div>
+        <div class="result" id="weather-result"></div>
+
+        <!-- Crop Recommendation -->
+        <h2>Crop Recommendation</h2>
+        <div class="form-group">
+            <label for="N">Nitrogen (N):</label>
+            <input type="text" id="N" name="N">
+        </div>
+        <div class="form-group">
+            <label for="P">Phosphorous (P):</label>
+            <input type="text" id="P" name="P">
+        </div>
+        <div class="form-group">
+            <label for="K">Potassium (K):</label>
+            <input type="text" id="K" name="K">
+        </div>
+        <div class="form-group">
+            <label for="temperature">Temperature (°C):</label>
+            <input type="text" id="temperature" name="temperature">
+        </div>
+        <div class="form-group">
+            <label for="humidity">Humidity (%):</label>
+            <input type="text" id="humidity" name="humidity">
+        </div>
+        <div class="form-group">
+            <label for="ph">pH Value:</label>
+            <input type="text" id="ph" name="ph">
+        </div>
+        <div class="form-group">
+            <label for="rainfall">Rainfall (mm):</label>
+            <input type="text" id="rainfall" name="rainfall">
+        </div>
+        <button onclick="recommendCrop()">Recommend Crop</button>
+        <div class="result" id="recommendation-result"></div>
+    </div>
+
+    <script>
+        const baseURL = 'https://your-api-url.com'; // Replace with your API base URL
+
+        async function getCropInfo() {
+            const cropName = document.getElementById('crop-name').value;
+            const response = await fetch(`${baseURL}/crop-info?crop_name=${cropName}`);
+            const data = await response.json();
+            document.getElementById('crop-result').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function getWeatherForecast() {
+            const villageName = document.getElementById('village-name').value;
+            const response = await fetch(`${baseURL}/weather-forecast?village_name=${villageName}`);
+            const data = await response.json();
+            document.getElementById('weather-result').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function recommendCrop() {
+            const N = document.getElementById('N').value;
+            const P = document.getElementById('P').value;
+            const K = document.getElementById('K').value;
+            const temperature = document.getElementById('temperature').value;
+            const humidity = document.getElementById('humidity').value;
+            const ph = document.getElementById('ph').value;
+            const rainfall = document.getElementById('rainfall').value;
+
+            const response = await fetch(`${baseURL}/recommend-crop`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ N, P, K, temperature, humidity, ph, rainfall })
+            });
+            const data = await response.json();
+            document.getElementById('recommendation-result').innerText = JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>
